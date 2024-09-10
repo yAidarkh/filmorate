@@ -19,7 +19,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         dataController.addUser(user);
-        log.debug("Добавлен новый пользватель с id: {}",user.getId());
+        log.debug("Добавлен новый пользватель с id: {}", user.getId());
         return ResponseEntity.ok(user);
     }
 

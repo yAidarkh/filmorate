@@ -29,15 +29,15 @@ public class DataController {
 
     public void addUser(User user) {
         log.trace("Запущен метод добавления пользователя в память.");
-        users.put(user.getId(),user);
+        users.put(user.getId(), user);
     }
 
     public void addFilm(Film film) {
         log.trace("Запущен метод добавления фильма в память.");
-        films.put(film.getId(),film);
+        films.put(film.getId(), film);
     }
 
-    public void clearData(){
+    public void clearData() {
         users.clear();
         films.clear();
     }

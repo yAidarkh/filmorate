@@ -29,9 +29,9 @@ public class User {
         this.id = generateId();
         this.email = email;
         this.login = login;
-        if (name == null || name.isBlank()){
+        if (name == null || name.isBlank()) {
             this.name = login;
-        }else {
+        } else {
             this.name = name;
         }
         this.birthday = birthday;

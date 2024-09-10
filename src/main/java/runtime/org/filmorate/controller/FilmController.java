@@ -18,7 +18,7 @@ public class FilmController {
     @PostMapping()
     public ResponseEntity<Film> createFilm(@Valid @RequestBody Film film) {
         dataController.addFilm(film);
-        log.debug("Добавлен новый фильм с id: {}",film.getId());
+        log.debug("Добавлен новый фильм с id: {}", film.getId());
         return ResponseEntity.ok(film);
     }
 
