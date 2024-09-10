@@ -32,7 +32,7 @@ public class Film {
         this.duration = duration;
     }
 
-    private synchronized long generateId() {
+    private long generateId() {
         return idCounter++;
     }
 }

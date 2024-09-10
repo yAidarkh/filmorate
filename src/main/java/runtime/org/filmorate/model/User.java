@@ -37,7 +37,7 @@ public class User {
         this.birthday = birthday;
     }
 
-    private synchronized long generateId() {
+    private long generateId() {
         return idCounter++;
     }
 }
