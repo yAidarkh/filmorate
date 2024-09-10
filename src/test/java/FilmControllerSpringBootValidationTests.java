@@ -47,7 +47,7 @@ public class FilmControllerSpringBootValidationTests {
 
     @Test
     public void createFilmFailDescription(){
-        String description = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
+        String description = "1".repeat(201);
         LocalDate localDate = LocalDate.of(1998,12,8);
         Film film = new Film("asd",description,localDate,200);
 
