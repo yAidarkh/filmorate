@@ -5,14 +5,18 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 
 import java.time.LocalDate;
+import java.util.HashMap;
 
 
 @Getter
 @Setter
+@Slf4j
 public class User {
+    public static final HashMap<Long, User> users = new HashMap<>();
     private static long idCounter = 1;
 
     private long id;
@@ -39,5 +43,10 @@ public class User {
 
     private long generateId() {
         return idCounter++;
+    }
+
+    public static void addUser(User user) {
+        log.trace("Запущен метод добавления пользователя в память.");
+        users.put(user.getId(), user);
     }
 }

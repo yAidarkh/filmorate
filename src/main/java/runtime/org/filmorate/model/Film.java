@@ -3,14 +3,18 @@ package runtime.org.filmorate.model;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import runtime.org.filmorate.validators.ReleaseDate;
 
 
 import java.time.LocalDate;
+import java.util.HashMap;
 
 @Getter
 @Setter
+@Slf4j
 public class Film {
+    public static final HashMap<Long, Film> films = new HashMap<>();
     private static long idCounter = 1;
 
     private long id;
@@ -35,4 +39,10 @@ public class Film {
     private long generateId() {
         return idCounter++;
     }
+
+    public static void addFilm(Film film) {
+        log.trace("Запущен метод добавления фильма в память.");
+        films.put(film.getId(), film);
+    }
+
 }

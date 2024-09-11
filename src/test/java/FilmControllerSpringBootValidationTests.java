@@ -3,7 +3,6 @@ import jakarta.validation.Validator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import runtime.org.filmorate.controller.DataController;
 import runtime.org.filmorate.controller.FilmController;
 import runtime.org.filmorate.model.Film;
 
@@ -19,11 +18,6 @@ public class FilmControllerSpringBootValidationTests {
         filmController = new FilmController();
     }
 
-    @AfterEach
-    void clearData(){
-        DataController.getInstance().clearData();
-    }
-
     @Test
     public void createFilmSucces(){
         LocalDate localDate = LocalDate.of(1998,12,8);
@@ -31,7 +25,7 @@ public class FilmControllerSpringBootValidationTests {
 
         filmController.createFilm(film);
 
-        assertEquals(1, DataController.getInstance().getFilms().size());
+        assertEquals(1, Film.films.size());
     }
 
     @Test

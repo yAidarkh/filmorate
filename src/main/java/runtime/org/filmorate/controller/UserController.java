@@ -14,22 +14,22 @@ import java.util.Collection;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    DataController dataController = DataController.getInstance();
 
     @PostMapping()
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        dataController.addUser(user);
+        User.addUser(user);
         log.debug("Добавлен новый пользватель с id: {}", user.getId());
         return ResponseEntity.ok(user);
     }
 
     @PutMapping()
     public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
-        if (!dataController.getUsers().containsKey(user.getId())) {
+
+        if (!User.users.containsKey(user.getId())) {
             log.info("Неверный id.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(user);
         }
-        dataController.addUser(user);
+        User.addUser(user);
         log.debug("Пользователь с id: {} обновлен", user.getId());
         return ResponseEntity.ok(user);
     }
@@ -37,6 +37,6 @@ public class UserController {
 
     @GetMapping()
     public Collection<User> getUsers() {
-        return dataController.getUsers().values();
+        return User.users.values();
     }
 }

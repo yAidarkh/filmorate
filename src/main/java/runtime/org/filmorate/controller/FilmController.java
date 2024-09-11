@@ -13,22 +13,21 @@ import java.util.Collection;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-    DataController dataController = DataController.getInstance();
 
     @PostMapping()
     public ResponseEntity<Film> createFilm(@Valid @RequestBody Film film) {
-        dataController.addFilm(film);
+        Film.addFilm(film);
         log.debug("Добавлен новый фильм с id: {}", film.getId());
         return ResponseEntity.ok(film);
     }
 
     @PutMapping()
     public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film) {
-        if (!dataController.getFilms().containsKey(film.getId())) {
+        if (!Film.films.containsKey(film.getId())) {
             log.info("Неверный id.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(film);
         }
-        dataController.addFilm(film);
+        Film.addFilm(film);
         log.debug("Фильм с id: {} обновлен", film.getId());
         return ResponseEntity.ok(film);
     }
@@ -36,6 +35,6 @@ public class FilmController {
 
     @GetMapping()
     public Collection<Film> getFilms() {
-        return dataController.getFilms().values();
+        return Film.films.values();
     }
 }
