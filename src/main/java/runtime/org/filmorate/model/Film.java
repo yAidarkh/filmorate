@@ -39,6 +39,4 @@ public class Film {
         return idCounter++;
     }
 
-
-
 }
