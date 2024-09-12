@@ -14,7 +14,7 @@ import java.util.HashMap;
 @Setter
 @Slf4j
 public class Film {
-    public static final HashMap<Long, Film> films = new HashMap<>();
+
     private static long idCounter = 1;
 
     private long id;
@@ -40,9 +40,6 @@ public class Film {
         return idCounter++;
     }
 
-    public static void addFilm(Film film) {
-        log.trace("Запущен метод добавления фильма в память.");
-        films.put(film.getId(), film);
-    }
+
 
 }

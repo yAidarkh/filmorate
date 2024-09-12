@@ -16,7 +16,7 @@ import java.util.HashMap;
 @Setter
 @Slf4j
 public class User {
-    public static final HashMap<Long, User> users = new HashMap<>();
+
     private static long idCounter = 1;
 
     private long id;
@@ -45,8 +45,5 @@ public class User {
         return idCounter++;
     }
 
-    public static void addUser(User user) {
-        log.trace("Запущен метод добавления пользователя в память.");
-        users.put(user.getId(), user);
-    }
+
 }

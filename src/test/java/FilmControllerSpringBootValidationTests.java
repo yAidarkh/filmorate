@@ -25,7 +25,7 @@ public class FilmControllerSpringBootValidationTests {
 
         filmController.createFilm(film);
 
-        assertEquals(1, Film.films.size());
+        assertEquals(1, filmController.getFilms().size());
     }
 
     @Test

@@ -8,26 +8,28 @@ import org.springframework.web.bind.annotation.*;
 import runtime.org.filmorate.model.Film;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
+    public final HashMap<Long, Film> films = new HashMap<>();
 
     @PostMapping()
     public ResponseEntity<Film> createFilm(@Valid @RequestBody Film film) {
-        Film.addFilm(film);
+        addFilm(film);
         log.debug("Добавлен новый фильм с id: {}", film.getId());
         return ResponseEntity.ok(film);
     }
 
     @PutMapping()
     public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film) {
-        if (!Film.films.containsKey(film.getId())) {
+        if (!films.containsKey(film.getId())) {
             log.info("Неверный id.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(film);
         }
-        Film.addFilm(film);
+        addFilm(film);
         log.debug("Фильм с id: {} обновлен", film.getId());
         return ResponseEntity.ok(film);
     }
@@ -35,6 +37,11 @@ public class FilmController {
 
     @GetMapping()
     public Collection<Film> getFilms() {
-        return Film.films.values();
+        return films.values();
+    }
+
+    public void addFilm(Film film) {
+        log.trace("Запущен метод добавления фильма в память.");
+        films.put(film.getId(), film);
     }
 }

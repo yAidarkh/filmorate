@@ -8,16 +8,17 @@ import org.springframework.web.bind.annotation.*;
 import runtime.org.filmorate.model.User;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 
 @RestController
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-
+    public final HashMap<Long, User> users = new HashMap<>();
     @PostMapping()
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        User.addUser(user);
+        addUser(user);
         log.debug("Добавлен новый пользватель с id: {}", user.getId());
         return ResponseEntity.ok(user);
     }
@@ -25,11 +26,11 @@ public class UserController {
     @PutMapping()
     public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
 
-        if (!User.users.containsKey(user.getId())) {
+        if (!users.containsKey(user.getId())) {
             log.info("Неверный id.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(user);
         }
-        User.addUser(user);
+        addUser(user);
         log.debug("Пользователь с id: {} обновлен", user.getId());
         return ResponseEntity.ok(user);
     }
@@ -37,6 +38,11 @@ public class UserController {
 
     @GetMapping()
     public Collection<User> getUsers() {
-        return User.users.values();
+        return users.values();
+    }
+
+    public void addUser(User user) {
+        log.trace("Запущен метод добавления пользователя в память.");
+        users.put(user.getId(), user);
     }
 }

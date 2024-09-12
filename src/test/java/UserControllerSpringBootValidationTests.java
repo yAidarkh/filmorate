@@ -28,7 +28,7 @@ public class UserControllerSpringBootValidationTests {
 
         userController.createUser(user);
 
-        assertEquals(1, User.users.size());
+        assertEquals(1, userController.getUsers().size());
     }
 
     @Test
