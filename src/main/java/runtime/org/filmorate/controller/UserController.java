@@ -16,6 +16,7 @@ import java.util.HashMap;
 @Slf4j
 public class UserController {
     public final HashMap<Long, User> users = new HashMap<>();
+
     @PostMapping()
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         addUser(user);
