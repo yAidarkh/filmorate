@@ -1,47 +1,52 @@
 package runtime.org.filmorate.controller;
 
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import runtime.org.filmorate.model.Film;
+import runtime.org.filmorate.service.FilmService;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/films")
-@Slf4j
+@RequiredArgsConstructor
 public class FilmController {
-    public final HashMap<Long, Film> films = new HashMap<>();
+    private final FilmService filmService;
 
     @PostMapping()
-    public ResponseEntity<Film> createFilm(@Valid @RequestBody Film film) {
-        addFilm(film);
-        log.debug("Добавлен новый фильм с id: {}", film.getId());
-        return ResponseEntity.ok(film);
+    public Film createFilm(@Valid @RequestBody Film film) {
+        return filmService.createFilm(film);
     }
 
     @PutMapping()
-    public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film) {
-        if (!films.containsKey(film.getId())) {
-            log.info("Неверный id.");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(film);
-        }
-        addFilm(film);
-        log.debug("Фильм с id: {} обновлен", film.getId());
-        return ResponseEntity.ok(film);
+    public Film updateFilm(@Valid @RequestBody Film film) {
+        return filmService.updateFilm(film);
     }
 
+    @DeleteMapping()
+    public Film removeFilm(@Valid @RequestBody Film film) {
+        return filmService.removeFilm(film);
+    }
 
     @GetMapping()
     public Collection<Film> getFilms() {
-        return films.values();
+        return filmService.getFilms();
     }
 
-    public void addFilm(Film film) {
-        log.trace("Запущен метод добавления фильма в память.");
-        films.put(film.getId(), film);
+    @PutMapping("/{id}/like/{userId}")
+    public Film likeFilm(@PathVariable Long id, @PathVariable Long userId) {
+        return filmService.putLike(id, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public Film unlikeFilm(@PathVariable Long id, @PathVariable Long userId) {
+        return filmService.removeLike(id, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getPopularFilms(@RequestParam int count) {
+        return filmService.showPopularFilms(count);
     }
 }

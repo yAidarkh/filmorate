@@ -1,49 +1,68 @@
 package runtime.org.filmorate.controller;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import runtime.org.filmorate.model.User;
+import runtime.org.filmorate.service.UserService;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Set;
 
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 @Slf4j
 public class UserController {
-    public final HashMap<Long, User> users = new HashMap<>();
+    private final UserService userService;
 
     @PostMapping()
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        addUser(user);
-        log.debug("Добавлен новый пользватель с id: {}", user.getId());
-        return ResponseEntity.ok(user);
+    public User createUser(@Valid @RequestBody User user) {
+        log.info("POST /users");
+        return userService.createUser(user);
     }
 
     @PutMapping()
-    public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
-
-        if (!users.containsKey(user.getId())) {
-            log.info("Неверный id.");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(user);
-        }
-        addUser(user);
-        log.debug("Пользователь с id: {} обновлен", user.getId());
-        return ResponseEntity.ok(user);
+    public User updateUser(@Valid @RequestBody User user) {
+        log.info("PUT /users");
+        return userService.updateUser(user);
     }
 
+    @DeleteMapping()
+    public User deleteUser(@Valid @RequestBody User user) {
+        log.info("DELETE /users");
+        return userService.removeUser(user);
+    }
 
     @GetMapping()
     public Collection<User> getUsers() {
-        return users.values();
+        log.info("GET /users");
+        return userService.getUsers();
     }
 
-    public void addUser(User user) {
-        log.trace("Запущен метод добавления пользователя в память.");
-        users.put(user.getId(), user);
+    @PutMapping("/{id}/friends/{friendsId}")
+    public User addFriend(@PathVariable Long id, @PathVariable Long friendsId) {
+        log.info("PUT /users/{id}/friends/{friendsId}");
+        return userService.addFriend(friendsId, id);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendsId}")
+    public User removeFriend(@PathVariable Long id, @PathVariable Long friendsId) {
+        log.info("DELETE /users/{id}/friends/{friendsId}");
+        return userService.removeFriend(friendsId, id);
+    }
+
+    @GetMapping("/{id}/friends")
+    public Set<User> getFriends(@PathVariable Long id) {
+        log.info("GET /users/{id}/friends");
+        return userService.getUserFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Set<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
+        return userService.getMutualFriends(otherId, id);
     }
 }

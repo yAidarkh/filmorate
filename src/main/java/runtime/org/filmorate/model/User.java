@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Getter
@@ -27,6 +29,7 @@ public class User {
     private String name;
     @Past(message = "Некоректно указана дата рождения.")
     private LocalDate birthday;
+    private Set<Long> friends = new HashSet<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.id = generateId();
