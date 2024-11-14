@@ -1,5 +1,6 @@
 package runtime.org.filmorate.model;
 
+
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,16 +9,15 @@ import runtime.org.filmorate.validators.ReleaseDate;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
 @Slf4j
 public class Film {
-
-    private static long idCounter = 1;
-
     private long id;
     @NotBlank(message = "Название не может быть пустым.")
     private String name;
@@ -28,18 +28,17 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Продолжительность не может быть отрицательной.")
     private int duration;
+    private Mpa mpa;
+    private List<Genre> genres = new ArrayList<>();
     private Set<Long> likes = new HashSet<>();
 
-    public Film(String name, String description, LocalDate releaseDate, int duration) {
-        this.id = generateId();
+    public Film(String name, String description, LocalDate releaseDate, Integer duration, Mpa mpa) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+        this.mpa = mpa;
     }
 
-    private long generateId() {
-        return idCounter++;
-    }
 
 }

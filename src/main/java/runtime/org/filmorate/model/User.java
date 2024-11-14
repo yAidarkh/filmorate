@@ -1,5 +1,6 @@
 package runtime.org.filmorate.model;
 
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
@@ -17,9 +18,6 @@ import java.util.Set;
 @Setter
 @Slf4j
 public class User {
-
-    private static long idCounter = 1;
-
     private long id;
     @NotBlank(message = "Email не может быть пустым.")
     @Email(message = "Некоректно указана почта.")
@@ -32,7 +30,6 @@ public class User {
     private Set<Long> friends = new HashSet<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
-        this.id = generateId();
         this.email = email;
         this.login = login;
         if (name == null || name.isBlank()) {
@@ -42,10 +39,5 @@ public class User {
         }
         this.birthday = birthday;
     }
-
-    private long generateId() {
-        return idCounter++;
-    }
-
 
 }

@@ -58,4 +58,10 @@ public class FilmController {
         log.info("GET /popular");
         return filmService.showPopularFilms(count);
     }
+
+    @GetMapping("/{id}")
+    public Film getFilm(@PathVariable Long id) {
+        log.info("GET /films/{id}");
+        return filmService.findFilmById(id);
+    }
 }

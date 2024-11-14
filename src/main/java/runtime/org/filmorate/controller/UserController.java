@@ -1,7 +1,6 @@
 package runtime.org.filmorate.controller;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -46,13 +45,13 @@ public class UserController {
     @PutMapping("/{id}/friends/{friendsId}")
     public User addFriend(@PathVariable Long id, @PathVariable Long friendsId) {
         log.info("PUT /users/{id}/friends/{friendsId}");
-        return userService.addFriend(friendsId, id);
+        return userService.addFriend(id, friendsId);
     }
 
     @DeleteMapping("/{id}/friends/{friendsId}")
     public User removeFriend(@PathVariable Long id, @PathVariable Long friendsId) {
         log.info("DELETE /users/{id}/friends/{friendsId}");
-        return userService.removeFriend(friendsId, id);
+        return userService.removeFriend(id, friendsId);
     }
 
     @GetMapping("/{id}/friends")
