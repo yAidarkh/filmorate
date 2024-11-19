@@ -99,7 +99,7 @@ public class UserStorageDaoImpl implements UserStorageDao {
     }
 
     @Override
-    public Set<User> getMutualFriends(long userId, long otherId) {
+    public Set<User> getMutualFriends(long userId, long otherId) { //TODO: Выгрузить сразу в виде объекта и чисто общих друзей
         checkUsers(otherId);
         checkUsers(userId);
         String sql = "select * from friends where user_id = ?";
@@ -124,8 +124,6 @@ public class UserStorageDaoImpl implements UserStorageDao {
         String sql = "select * from friends where user_id = ?";
         List<Long> friendsId = jdbcTemplate.query(sql, new Object[]{userId}, (rs, rowNum) -> rs.getLong("friend_id"));
         friendsId.stream().map(friendId -> findById(friendId).get()).forEach(friends::add);
-        int temp = friendsId.size();
-        log.info(temp + "");
         return friends;
     }
 
