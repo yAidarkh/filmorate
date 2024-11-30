@@ -1,11 +1,9 @@
 package runtime.org.filmorate.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import runtime.org.filmorate.dao.GenreStorageDao;
-import runtime.org.filmorate.exceptions.GenreNotFoundException;
 import runtime.org.filmorate.model.Genre;
 
 import java.sql.ResultSet;
@@ -21,12 +19,7 @@ public class GenreStorageDaoImpl implements GenreStorageDao {
 
     @Override
     public Optional<Genre> findById(long id) {
-        try {
-            Genre genre = jdbcTemplate.queryForObject("select * from genres where id = ?", this::mapRow, id);
-            return Optional.of(genre);
-        } catch (EmptyResultDataAccessException e) {
-            throw new GenreNotFoundException("Genre with id " + id + " not found");
-        }
+        return jdbcTemplate.query("select * from genres where id = ?", this::mapRow, id).stream().findFirst();
     }
 
     @Override

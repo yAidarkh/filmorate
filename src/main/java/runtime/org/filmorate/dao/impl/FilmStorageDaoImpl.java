@@ -3,12 +3,10 @@ package runtime.org.filmorate.dao.impl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import runtime.org.filmorate.dao.FilmStorageDao;
-import runtime.org.filmorate.exceptions.*;
 import runtime.org.filmorate.model.Film;
 import runtime.org.filmorate.model.Genre;
 import runtime.org.filmorate.model.Mpa;
@@ -39,15 +37,6 @@ public class FilmStorageDaoImpl implements FilmStorageDao {
     @Override
     public Film createFilm(Film film) {
         List<Genre> genres = film.getGenres();
-        for (Genre genre : genres) {
-            if (genre.getId() > 6 || genre.getId() < 0) {
-                throw new GenreIsntCorrectException("genre not correct");
-            }
-        }
-        long mpaId = film.getMpa().getId();
-        if (mpaId > 5 || mpaId < 0) {
-            throw new MpaIsntCorrectException("Mpa not correct");
-        }
         SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate).
                 withTableName("films").
                 usingGeneratedKeyColumns("id");
@@ -58,10 +47,10 @@ public class FilmStorageDaoImpl implements FilmStorageDao {
                 "duration", film.getDuration(),
                 "mpa_id", film.getMpa().getId()
         );
-        int id = insert.executeAndReturnKey(map).intValue();
+        long id = insert.executeAndReturnKey(map).longValue();
         String sql = "insert into films_genres (film_id,genre_id) values (?,?)";
         genres.forEach(genre -> jdbcTemplate.update(sql, id, genre.getId()));
-        film = findById((long) id).get();
+        film = findById(id).orElseThrow();
         return film;
     }
 
@@ -73,9 +62,6 @@ public class FilmStorageDaoImpl implements FilmStorageDao {
 
     @Override
     public Film updateFilm(Film film) {
-        if (findById(film.getId()).isEmpty()) {
-            throw new UserNotFoundException("Фильм с ID " + film.getId() + " не найден");
-        }
         jdbcTemplate.update("update films set " +
                         "name = ?, " +
                         "description = ?, " +
@@ -101,14 +87,14 @@ public class FilmStorageDaoImpl implements FilmStorageDao {
     public Film putLike(Long filmId, Long userId) {
         String sql = "insert into likes (film_id, user_id) values (?, ?)";
         jdbcTemplate.update(sql, filmId, userId);
-        return findById(filmId).get();
+        return findById(filmId).orElseThrow();
     }
 
     @Override
     public Film removeLike(Long filmId, Long userId) {
         String sql = "delete from likes where film_id = ? and user_id = ?";
         jdbcTemplate.update(sql, filmId, userId);
-        return findById(filmId).get();
+        return findById(filmId).orElseThrow();
     }
 
     @Override
@@ -117,21 +103,13 @@ public class FilmStorageDaoImpl implements FilmStorageDao {
                 "group by films.id, films.name, films.description, films.release_date, films.duration, mpa.id, mpa.name " +
                 "order by count(likes.film_id) desc";
         List<Film> films = jdbcTemplate.query(sql, this::mapRow);
-        if (count > films.size()) {
-            count = films.size();
-        }
         return films.subList(0, count);
     }
 
     @Override
     public Optional<Film> findById(Long id) {
         String sql = SELECT + " where films.id = ?";
-        try {
-            Film film = jdbcTemplate.queryForObject(sql, this::mapRow, id);
-            return Optional.of(film);
-        } catch (EmptyResultDataAccessException e) {
-            throw new FilmNotFoundException("film not found");
-        }
+        return jdbcTemplate.query(sql, this::mapRow, id).stream().findFirst();
     }
 
     public Film mapRow(ResultSet rs, int rowNum) throws SQLException {

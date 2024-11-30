@@ -10553,3 +10553,19 @@ select * from genres join films_genres on films_genres.film_id = ? and films_gen
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
+2024-11-30 09:50:15.918136+05:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "SELECT u.id, u.email, u.login, u.name, u.birthday FROM users u JOIN friends f1 ON u.id = f1.friend_id JOIN friends f2 ON u.id = f2.friend_id WHERE f1.user_id = [*]:userId AND f2.user_id = :otherId;"; ожидалось "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT u.id, u.email, u.login, u.name, u.birthday FROM users u JOIN friends f1 ON u.id = f1.friend_id JOIN friends f2 ON u.id = f2.friend_id WHERE f1.user_id = [*]:userId AND f2.user_id = :otherId;"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT u.id, u.email, u.login, u.name, u.birthday FROM users u JOIN friends f1 ON u.id = f1.friend_id JOIN friends f2 ON u.id = f2.friend_id WHERE f1.user_id = :userId AND f2.user_id = :otherId; [42001-224]
+2024-11-30 09:50:22.998707+05:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "SELECT u.id, u.email, u.login, u.name, u.birthday FROM users u JOIN friends f1 ON u.id = f1.friend_id JOIN friends f2 ON u.id = f2.friend_id WHERE f1.user_id = [*]:userId AND f2.user_id = :otherId;"; ожидалось "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "SELECT u.id, u.email, u.login, u.name, u.birthday FROM users u JOIN friends f1 ON u.id = f1.friend_id JOIN friends f2 ON u.id = f2.friend_id WHERE f1.user_id = [*]:userId AND f2.user_id = :otherId;"; expected "ALL (, ANY (, SOME ("; SQL statement:
+SELECT u.id, u.email, u.login, u.name, u.birthday FROM users u JOIN friends f1 ON u.id = f1.friend_id JOIN friends f2 ON u.id = f2.friend_id WHERE f1.user_id = :userId AND f2.user_id = :otherId; [42001-224]
+2024-11-30 09:51:18.176528+05:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "SELECT u.id, u.email, u.login, u.name, u.birthdayFROM users [*]uJOIN friends f1 ON u.id = f1.friend_idJOIN friends f2 ON u.id = f2.friend_idWHERE f1.user_id = :userId  AND f2.user_id = :otherId;"
+Syntax error in SQL statement "SELECT u.id, u.email, u.login, u.name, u.birthdayFROM users [*]uJOIN friends f1 ON u.id = f1.friend_idJOIN friends f2 ON u.id = f2.friend_idWHERE f1.user_id = :userId  AND f2.user_id = :otherId;"; SQL statement:
+SELECT u.id, u.email, u.login, u.name, u.birthdayFROM users uJOIN friends f1 ON u.id = f1.friend_idJOIN friends f2 ON u.id = f2.friend_idWHERE f1.user_id = :userId  AND f2.user_id = :otherId; [42000-224]
+2024-11-30 09:52:38.644302+05:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "select u.id, u.email, u.login, u.name, u.birthday from users u join friends f1 ON u.id = f1.friend_id join friends f2 ON u.id = f2.friend_id where f1.user_id = [*]:userId and f2.user_id = :otherId;"; ожидалось "ALL (, ANY (, SOME ("
+Syntax error in SQL statement "select u.id, u.email, u.login, u.name, u.birthday from users u join friends f1 ON u.id = f1.friend_id join friends f2 ON u.id = f2.friend_id where f1.user_id = [*]:userId and f2.user_id = :otherId;"; expected "ALL (, ANY (, SOME ("; SQL statement:
+select u.id, u.email, u.login, u.name, u.birthday from users u join friends f1 ON u.id = f1.friend_id join friends f2 ON u.id = f2.friend_id where f1.user_id = :userId and f2.user_id = :otherId; [42001-224]

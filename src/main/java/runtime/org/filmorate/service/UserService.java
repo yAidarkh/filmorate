@@ -39,6 +39,9 @@ public class UserService {
     }
 
     public User updateUser(User user) {
+        if (userStorage.findById(user.getId()).isEmpty()) {
+            throw new UserNotFoundException("User with id " + user.getId() + " not found");
+        }
         return userStorage.updateUser(user);
     }
 
@@ -51,7 +54,7 @@ public class UserService {
     }
 
     public User getUserById(Long userId) {
-        return userStorage.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found"));
+        return userStorage.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
     }
 
 }

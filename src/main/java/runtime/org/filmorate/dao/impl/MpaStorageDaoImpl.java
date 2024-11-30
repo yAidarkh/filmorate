@@ -1,11 +1,9 @@
 package runtime.org.filmorate.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import runtime.org.filmorate.dao.MpaStorageDao;
-import runtime.org.filmorate.exceptions.MpaNotFoundException;
 import runtime.org.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
@@ -20,12 +18,7 @@ public class MpaStorageDaoImpl implements MpaStorageDao {
 
     @Override
     public Optional<Mpa> findById(long id) {
-        try {
-            Mpa mpa = jdbcTemplate.queryForObject("select * from mpa where id = ?", this::mapRow, id);
-            return Optional.of(mpa);
-        } catch (EmptyResultDataAccessException e) {
-            throw new MpaNotFoundException("Mpa with id " + id + " not found");
-        }
+        return jdbcTemplate.query("select * from mpa where id = ?", this::mapRow, id).stream().findFirst();
     }
 
     @Override

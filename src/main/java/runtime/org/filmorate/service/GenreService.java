@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import runtime.org.filmorate.dao.GenreStorageDao;
+import runtime.org.filmorate.exceptions.GenreNotFoundException;
 import runtime.org.filmorate.model.Genre;
 
 import java.util.List;
@@ -16,7 +17,11 @@ public class GenreService {
     private final GenreStorageDao genreStorageDao;
 
     public Optional<Genre> findById(long id) {
-        return genreStorageDao.findById(id);
+        Optional<Genre> genre = genreStorageDao.findById(id);
+        if (genre.isEmpty()) {
+            throw new GenreNotFoundException("Genre with id " + id + " not found");
+        }
+        return genre;
     }
 
     ;

@@ -4,7 +4,6 @@ package runtime.org.filmorate.dao.impl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,6 @@ import runtime.org.filmorate.model.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 @Getter
@@ -71,12 +69,7 @@ public class UserStorageDaoImpl implements UserStorageDao {
     }
 
     public Optional<User> findById(long id) {
-        try {
-            User user = jdbcTemplate.queryForObject("select * from users where id = ?", this::mapRow, id);
-            return Optional.of(user);
-        } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException("User with id " + id + " not found");
-        }
+        return jdbcTemplate.query("select * from users where id = ?", this::mapRow, id).stream().findFirst();
     }
 
     @Override
@@ -99,22 +92,15 @@ public class UserStorageDaoImpl implements UserStorageDao {
     }
 
     @Override
-    public Set<User> getMutualFriends(long userId, long otherId) { //TODO: Выгрузить сразу в виде объекта и чисто общих друзей
-        checkUsers(otherId);
-        checkUsers(userId);
-        String sql = "select * from friends where user_id = ?";
-        Set<Long> userFriends = new HashSet<>(jdbcTemplate.query(sql, new Object[]{userId}, (rs, rowNum) -> rs.getLong("friend_id")));
-        Set<Long> otherFriends = new HashSet<>(jdbcTemplate.query(sql, new Object[]{otherId}, (rs, rowNum) -> rs.getLong("friend_id")));
-        userFriends.retainAll(otherFriends);
-
-        if (!userFriends.isEmpty()) {
-            String userSql = "select * from users where id = ?";
-            return userFriends.stream()
-                    .map(friendId -> jdbcTemplate.queryForObject(userSql, new Object[]{friendId}, this::mapRow))
-                    .collect(Collectors.toSet());
-        } else {
-            return Collections.emptySet();
-        }
+    public Set<User> getMutualFriends(long userId, long otherId) {
+        String sql = "select u.id, u.email, u.login, u.name, u.birthday " +
+                "from users u " +
+                "join friends f1 ON u.id = f1.friend_id " +
+                "join friends f2 ON u.id = f2.friend_id " +
+                "where f1.user_id = ? " +
+                "and f2.user_id = ?";
+        Collection<User> users = jdbcTemplate.query(sql, this::mapRow, userId, otherId);
+        return new HashSet<>(users);
     }
 
     @Override
